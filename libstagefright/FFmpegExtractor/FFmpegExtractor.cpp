@@ -1489,7 +1489,13 @@ static bool isCodecSupportedByStagefright(enum AVCodecID codec_id)
     case AV_CODEC_ID_VORBIS:
     case AV_CODEC_ID_PCM_MULAW: //g711
     case AV_CODEC_ID_PCM_ALAW:  //g711
-    //case AV_CODEC_ID_PCM_XXX: //FIXME more PCM?
+    case AV_CODEC_ID_GSM_MS:
+    case AV_CODEC_ID_PCM_S8:
+    case AV_CODEC_ID_PCM_U8:
+    case AV_CODEC_ID_PCM_S16LE:
+    case AV_CODEC_ID_PCM_U16LE:
+    case AV_CODEC_ID_PCM_S24LE:
+    case AV_CODEC_ID_PCM_U24LE:
         supported = true;
         break;
 
