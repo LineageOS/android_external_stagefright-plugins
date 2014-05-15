@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da0c15f0_b8c030e2",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1750,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2014-05-15T15:46:51Z",
+      "side": 1,
+      "message": "Maybe change it to ALOGD and surround with #if !LOG_NDEBUG instead?",
+      "revId": "644e01559137adf235914446d14200021fa1fa94",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
