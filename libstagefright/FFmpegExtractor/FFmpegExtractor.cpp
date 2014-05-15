@@ -1746,12 +1746,14 @@ static const char *findMatchingContainer(const char *name)
 	size_t i = 0;
 	const char *container = NULL;
 
+#if DEBUG
 	ALOGI("list the formats suppoted by ffmpeg: ");
 	ALOGI("========================================");
 	for (i = 0; i < NELEM(FILE_FORMATS); ++i) {
 		ALOGV("format_names[%02d]: %s", i, FILE_FORMATS[i].format);
 	}
 	ALOGI("========================================");
+#endif
 
 	for (i = 0; i < NELEM(FILE_FORMATS); ++i) {
 		int len = strlen(FILE_FORMATS[i].format);
