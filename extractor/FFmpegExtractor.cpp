@@ -1958,6 +1958,12 @@ static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool fa
         goto fail;
     }
 
+    /* MPEG4 has its own Extractor, and it's much faster than
+     * this. Give the media a fast peek just in case, but we
+     * want to keep it short to avoid jank with processing
+     * locally-recorded files (5 seconds to generate a thumb
+     * isn't acceptable :) )
+     */
     if (ic->iformat != NULL && ic->iformat->name != NULL &&
         findMatchingContainer(ic->iformat->name) != NULL &&
         !strcasecmp(findMatchingContainer(ic->iformat->name),
@@ -1965,7 +1971,13 @@ static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool fa
         if (fastMPEG4) {
             container = findMatchingContainer(ic->iformat->name);
             goto fail;
+        } else {
+            // Never spend more than 100 msec on mpeg4
+            ic->max_analyze_duration = 100 * AV_TIME_BASE / 1000; // 100 msec
         }
+    } else {
+        // half a second appears to be enough for the rest
+        ic->max_analyze_duration = 500 * AV_TIME_BASE / 1000; // 500 msec
     }
 
     opts = setup_find_stream_info_opts(ic, codec_opts);
