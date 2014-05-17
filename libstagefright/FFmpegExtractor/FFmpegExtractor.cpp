@@ -1797,6 +1797,9 @@ static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool fa
 		if (fastMPEG4) {
 			container = findMatchingContainer(ic->iformat->name);
 			goto fail;
+		} else {
+			// Never spend more than 100 msec on mpeg4
+			ic->max_analyze_duration = 100 * AV_TIME_BASE / 1000; // 100 msec
 		}
 	}
 
@@ -1807,6 +1810,7 @@ static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool fa
 
 	opts = setup_find_stream_info_opts(ic, codec_opts);
 	nb_streams = ic->nb_streams;
+	ic->max_analyze_duration = 500 * AV_TIME_BASE / 1000; // 500 msec
 	err = avformat_find_stream_info(ic, opts);
 	if (err < 0) {
         ALOGE("%s: could not find stream info, err:%s", url, av_err2str(err));
