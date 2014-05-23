@@ -374,11 +374,41 @@ OMX_ERRORTYPE SoftFFmpegAudio::internalGetParameter(
             profile->bInterleaved = OMX_TRUE;
             profile->nBitPerSample = 16;
             profile->ePCMMode = OMX_AUDIO_PCMModeLinear;
-            profile->eChannelMapping[0] = OMX_AUDIO_ChannelLF;
-            profile->eChannelMapping[1] = OMX_AUDIO_ChannelRF;
+            switch (mAudioSrcChannels) {
+            case 1:
+               profile->eChannelMapping[0] = OMX_AUDIO_ChannelCF;
+               break;
+            case 8:
+               profile->eChannelMapping[0] = OMX_AUDIO_ChannelLF;
+               profile->eChannelMapping[1] = OMX_AUDIO_ChannelRF;
+               profile->eChannelMapping[2] = OMX_AUDIO_ChannelCF;
+               profile->eChannelMapping[3] = OMX_AUDIO_ChannelLFE;
+               profile->eChannelMapping[4] = OMX_AUDIO_ChannelLR;
+               profile->eChannelMapping[5] = OMX_AUDIO_ChannelRR;
+               profile->eChannelMapping[6] = OMX_AUDIO_ChannelLS;
+               profile->eChannelMapping[7] = OMX_AUDIO_ChannelRS;
+               break;
+           case 6:
+               profile->eChannelMapping[0] = OMX_AUDIO_ChannelLF;
+               profile->eChannelMapping[1] = OMX_AUDIO_ChannelRF;
+               profile->eChannelMapping[2] = OMX_AUDIO_ChannelCF;
+               profile->eChannelMapping[3] = OMX_AUDIO_ChannelLFE;
+               profile->eChannelMapping[4] = OMX_AUDIO_ChannelLR;
+               profile->eChannelMapping[5] = OMX_AUDIO_ChannelRR;
+               break;
+            case 4:
+               profile->eChannelMapping[0] = OMX_AUDIO_ChannelLF;
+               profile->eChannelMapping[1] = OMX_AUDIO_ChannelRF;
+               profile->eChannelMapping[2] = OMX_AUDIO_ChannelLR;
+               profile->eChannelMapping[3] = OMX_AUDIO_ChannelRR;
+               break;
+            case 2:
+               profile->eChannelMapping[0] = OMX_AUDIO_ChannelLF;
+               profile->eChannelMapping[1] = OMX_AUDIO_ChannelRF;
+               break;
+             }
 
             CHECK(isConfigured());
-
             profile->nChannels = mAudioSrcChannels;
             profile->nSamplingRate = mAudioSrcFreq;
 
@@ -691,7 +721,11 @@ void SoftFFmpegAudio::adjustAudioParams() {
     sampling_rate = mCtx->sample_rate;
 
     //channels support 1 or 2 only
-    channels = mCtx->channels >= 2 ? 2 : 1;
+
+    //let android audio mixer to downmix if there is no multichannel output
+    //and use number of channels from the source file useful for HDMI output
+    //channels = mCtx->channels >= 2 ? 2 : 1; /*TO DO*/
+    channels = mCtx->channels;
 
     //4000 <= sampling rate <= 48000
     if (sampling_rate < 4000) {
