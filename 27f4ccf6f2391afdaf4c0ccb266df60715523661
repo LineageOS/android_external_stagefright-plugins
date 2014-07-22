@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a061dce_ccb9e130",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 16
+      },
+      "writtenOn": "2014-07-22T20:42:59Z",
+      "side": 1,
+      "message": "Misspelled here too.",
+      "revId": "27f4ccf6f2391afdaf4c0ccb266df60715523661",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a061dce_6cac15ee",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1751,
+      "author": {
+        "id": 16
+      },
+      "writtenOn": "2014-07-22T20:42:59Z",
+      "side": 1,
+      "message": "Perhaps you want to correct the spelling on this, ie. SUPPORT_UNKNOWN_FORMAT. :)",
+      "revId": "27f4ccf6f2391afdaf4c0ccb266df60715523661",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
