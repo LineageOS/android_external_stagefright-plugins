@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a1b2928_1e610a3a",
+        "filename": "libstagefright/codecs/ffmpegdec/adec/SoftFFmpegAudio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 10094
+      },
+      "writtenOn": "2014-10-02T03:41:40Z",
+      "side": 1,
+      "message": "Fix the log message",
+      "revId": "200dd970b9db6239a56cc339102885d52c5fe3cb",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
