@@ -380,20 +380,46 @@ OMX_ERRORTYPE SoftFFmpegAudio::internalGetParameter(
             profile->eNumData = OMX_NumericalDataSigned;
             profile->eEndian = OMX_EndianBig;
             profile->bInterleaved = OMX_TRUE;
-            profile->nBitPerSample = 16;
             profile->ePCMMode = OMX_AUDIO_PCMModeLinear;
 
             if (getOMXChannelMapping(mAudioSrcChannels, profile->eChannelMapping) != OK) {
                 return OMX_ErrorNone;
             }
 
-            CHECK(isConfigured());
-            profile->nChannels = mAudioSrcChannels;
-            profile->nSamplingRate = mAudioSrcFreq;
+            if (isConfigured()) {
+                int32_t bits_per_sample = 16;
+                profile->nChannels = mAudioSrcChannels;
+                profile->nSamplingRate = mAudioSrcFreq;
+
+                // We'll need to open the decoder to check the real bit width
+                if (mHighResAudioEnabled) {
+                    if (!mCodecAlreadyOpened) {
+                        if (openDecoder() != ERR_OK) {
+                            mSignalledError = true;
+                            return OMX_ErrorUndefined;
+                        }
+                    }
+
+                    if (mCtx->bits_per_coded_sample > 0) {
+                        if (mCtx->bits_per_raw_sample > 0) {
+                            bits_per_sample = mCtx->bits_per_raw_sample;
+                        } else {
+                            bits_per_sample = mCtx->bits_per_coded_sample;
+                        }
+                    } else if (!(mCtx->codec_id == AV_CODEC_ID_WMAV2 || mCtx->codec_id == AV_CODEC_ID_WMAV1)) {
+                        bits_per_sample = (av_get_bytes_per_sample(mCtx->sample_fmt) * 8) > 16 ? 24 : 16;
+                    }
+                }
+                profile->nBitPerSample = bits_per_sample;
+            } else {
+                profile->nChannels = 2;
+                profile->nSamplingRate = 44100;
+                profile->nBitPerSample = 16;
+            }
 
             //mCtx has been updated(adjustAudioParams)!
-            ALOGV("get pcm params, nChannels:%lu, nSamplingRate:%lu, nBitsPerSample:%lu",
-                   profile->nChannels, profile->nSamplingRate, profile->nBitPerSample);
+            ALOGV("get pcm params, nChannels:%lu, nSamplingRate:%lu, nBitsPerSample:%lu, sample_fmt=%d, configured=%d",
+                   profile->nChannels, profile->nSamplingRate, profile->nBitPerSample, mCtx->sample_fmt, isConfigured());
 
             return OMX_ErrorNone;
         }
@@ -705,14 +731,9 @@ void SoftFFmpegAudio::adjustAudioParams() {
     //and use number of channels from the source file, useful for HDMI/offload output
     channels = mCtx->channels;
 
-    // if highres is available, we can output 24-bit pcm at 192KHz
+    // if highres is available, we can output at 192KHz
     if (mHighResAudioEnabled) {
         max_rate = 192000;
-        int bits = av_get_bytes_per_sample(mCtx->sample_fmt) * 8;
-        if (bits >= 24) {
-            sample_fmt = AV_SAMPLE_FMT_S32;
-            ALOGD("Enabled high-resolution audio for sample format %d", sample_fmt);
-        }
     }
 
     //4000 <= sampling rate <= 48000/192000
