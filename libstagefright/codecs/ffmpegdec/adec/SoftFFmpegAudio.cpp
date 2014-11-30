@@ -101,7 +101,7 @@ SoftFFmpegAudio::SoftFFmpegAudio(
     setAudioClock(0);
 
     char value[PROPERTY_VALUE_MAX] = {0};
-    property_get("audio.offload.24bit.enable", value, "0");
+    property_get("audio.offload.24bit.enable", value, "1");
     mHighResAudioEnabled = atoi(value);
 
     ALOGD("SoftFFmpegAudio component: %s mMode: %d mHighResAudioEnabled: %d",
@@ -1016,8 +1016,7 @@ OMX_ERRORTYPE SoftFFmpegAudio::internalSetParameter(
 
             mCtx->channels = profile->nChannels;
             mCtx->sample_rate = profile->nSampleRate;
-            mCtx->bits_per_coded_sample = profile->nBitsPerSample > 16 ? 32 : profile->nBitsPerSample;
-            mCtx->bits_per_raw_sample = profile->nBitsPerSample;
+            mCtx->bits_per_coded_sample = profile->nBitsPerSample > 16 ? 24 : profile->nBitsPerSample;
 
             adjustAudioParams();
 
