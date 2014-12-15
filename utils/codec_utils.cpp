@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-//#define LOG_NDEBUG 0
+#define LOG_NDEBUG 0
 #define LOG_TAG "codec_utils"
 #include <utils/Log.h>
 
@@ -154,7 +154,7 @@ sp<MetaData> setMPEG4Format(AVCodecContext *avctx)
     return meta;
 }
 
-sp<MetaData> setH263Format(AVCodecContext *avctx __unused)
+sp<MetaData> setH263Format(AVCodecContext *avctx)
 {
     ALOGV("H263");
 
@@ -190,7 +190,7 @@ sp<MetaData> setVC1Format(AVCodecContext *avctx)
     return meta;
 }
 
-sp<MetaData> setWMV1Format(AVCodecContext *avctx __unused)
+sp<MetaData> setWMV1Format(AVCodecContext *avctx)
 {
     ALOGV("WMV1");
 
@@ -283,7 +283,7 @@ sp<MetaData> setHEVCFormat(AVCodecContext *avctx)
     return meta;
 }
 
-sp<MetaData> setVP8Format(AVCodecContext *avctx __unused)
+sp<MetaData> setVP8Format(AVCodecContext *avctx)
 {
     ALOGV("VP8");
 
@@ -293,7 +293,7 @@ sp<MetaData> setVP8Format(AVCodecContext *avctx __unused)
     return meta;
 }
 
-sp<MetaData> setVP9Format(AVCodecContext *avctx __unused)
+sp<MetaData> setVP9Format(AVCodecContext *avctx)
 {
     ALOGV("VP9");
 
@@ -305,7 +305,7 @@ sp<MetaData> setVP9Format(AVCodecContext *avctx __unused)
 
 //audio
 
-sp<MetaData> setMP2Format(AVCodecContext *avctx __unused)
+sp<MetaData> setMP2Format(AVCodecContext *avctx)
 {
     ALOGV("MP2");
 
@@ -315,7 +315,7 @@ sp<MetaData> setMP2Format(AVCodecContext *avctx __unused)
     return meta;
 }
 
-sp<MetaData> setMP3Format(AVCodecContext *avctx __unused)
+sp<MetaData> setMP3Format(AVCodecContext *avctx)
 {
     ALOGV("MP3");
 
@@ -348,7 +348,7 @@ sp<MetaData> setVORBISFormat(AVCodecContext *avctx)
     return meta;
 }
 
-sp<MetaData> setAC3Format(AVCodecContext *avctx __unused)
+sp<MetaData> setAC3Format(AVCodecContext *avctx)
 {
     ALOGV("AC3");
 

@@ -97,6 +97,7 @@ private:
     bool mExtradataReady;
     bool mIgnoreExtradata;
     bool mSignalledError;
+    bool mDoDeinterlace;
     int32_t mWidth, mHeight, mStride;
 
     int64_t mLastFrameDelay;
