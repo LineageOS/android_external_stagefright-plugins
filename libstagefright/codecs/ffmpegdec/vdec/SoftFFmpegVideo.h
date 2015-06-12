@@ -18,17 +18,20 @@
 
 #define SOFT_FFMPEGVIDEO_H_
 
-#include "SimpleSoftOMXComponent.h"
+#include "SoftVideoDecoderOMXComponent.h"
 
 #include "utils/ffmpeg_utils.h"
 
 namespace android {
 
-struct SoftFFmpegVideo : public SimpleSoftOMXComponent {
+struct SoftFFmpegVideo : public SoftVideoDecoderOMXComponent {
     SoftFFmpegVideo(const char *name,
+            const char *componentRole,
+            OMX_VIDEO_CODINGTYPE codingType,
             const OMX_CALLBACKTYPE *callbacks,
             OMX_PTR appData,
-            OMX_COMPONENTTYPE **component);
+            OMX_COMPONENTTYPE **component,
+            enum AVCodecID codecID);
 
 protected:
     virtual ~SoftFFmpegVideo();
@@ -41,7 +44,8 @@ protected:
 
     virtual void onQueueFilled(OMX_U32 portIndex);
     virtual void onPortFlushCompleted(OMX_U32 portIndex);
-    virtual void onPortEnableCompleted(OMX_U32 portIndex, bool enabled);
+    //virtual void updatePortDefinitions(bool updateCrop = true, bool updateInputSize = false);
+    virtual void onReset();
 
 private:
     enum {
@@ -50,23 +54,6 @@ private:
         kNumInputBuffers  = 5,
         kNumOutputBuffers = 2,
     };
-
-    enum {
-        MODE_NONE,
-        MODE_MPEG2,
-        MODE_H263,
-        MODE_MPEG4,
-        MODE_WMV,
-        MODE_RV,
-        MODE_H264,
-        MODE_VP8,
-        MODE_VP9,
-        MODE_VC1,
-        MODE_FLV1,
-        MODE_DIVX,
-        MODE_HEVC,
-        MODE_TRIAL
-    } mMode;
 
     enum EOSStatus {
         INPUT_DATA_AVAILABLE,
@@ -84,6 +71,7 @@ private:
 		ERR_SWS_FAILED          = -3,
     };
 
+    OMX_VIDEO_CODINGTYPE mCodingType;
     bool mFFmpegAlreadyInited;
     bool mCodecAlreadyOpened;
     bool mPendingSettingChangeEvent;
@@ -96,30 +84,24 @@ private:
 
     bool mExtradataReady;
     bool mIgnoreExtradata;
-    bool mSignalledError;
-    int32_t mWidth, mHeight, mStride;
+    int32_t mStride;
+    int32_t mOutputWidth;
+    int32_t mOutputHeight;
 
+    bool mSignalledError;
     int64_t mLastFrameDelay;
     int64_t mLastPTS;
 
-    enum {
-        NONE,
-        AWAITING_DISABLED,
-        AWAITING_ENABLED
-    } mOutputPortSettingsChange;
-
-    void     setMode(const char *name);
-    void     initInputFormat(uint32_t mode, OMX_PARAM_PORTDEFINITIONTYPE &def);
+    void     initInputFormat(uint32_t mode, OMX_PARAM_PORTDEFINITIONTYPE *def);
 	void     getInputFormat(uint32_t mode, OMX_VIDEO_PARAM_PORTFORMATTYPE *formatParams);
     void     setDefaultCtx(AVCodecContext *avctx, const AVCodec *codec);
     OMX_ERRORTYPE isRoleSupported(const OMX_PARAM_COMPONENTROLETYPE *roleParams);
 
-    void     initPorts();
-    status_t initDecoder();
+    status_t initDecoder(enum AVCodecID codecID);
     void     deInitDecoder();
 
     bool     isPortSettingChanged();
-	bool     handlePortSettingChangeEvent();
+
 	int32_t  handleExtradata();
 	int32_t  openDecoder();
     void     initPacket(AVPacket *pkt, OMX_BUFFERHEADERTYPE *inHeader);
@@ -128,8 +110,6 @@ private:
 	int32_t  drainOneOutputBuffer();
 	void     drainEOSOutputBuffer();
 	void     drainAllOutputBuffers();
-
-    void     updatePortDefinitions();
 
     DISALLOW_EVIL_CONSTRUCTORS(SoftFFmpegVideo);
 };
