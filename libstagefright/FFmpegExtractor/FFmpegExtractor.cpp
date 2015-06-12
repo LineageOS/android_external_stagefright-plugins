@@ -479,6 +479,7 @@ sp<MetaData> FFmpegExtractor::setAudioFormat(AVStream *stream)
                 avctx->codec_id, avcodec_get_name(avctx->codec_id));
         meta = new MetaData;
         meta->setInt32(kKeyCodecId, avctx->codec_id);
+        meta->setInt32(kKeyCodedSampleBits, avctx->bits_per_coded_sample);
         meta->setCString(kKeyMIMEType, MEDIA_MIMETYPE_AUDIO_FFMPEG);
         if (avctx->extradata_size > 0) {
             meta->setData(kKeyRawCodecSpecificData, 0, avctx->extradata, avctx->extradata_size);
