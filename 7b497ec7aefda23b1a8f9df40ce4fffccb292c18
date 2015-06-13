@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a461143_ef24bdb0",
+        "filename": "libstagefright/codecs/ffmpegdec/vdec/SoftFFmpegVideo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-13T13:06:25Z",
+      "side": 1,
+      "message": "Can delete",
+      "revId": "7b497ec7aefda23b1a8f9df40ce4fffccb292c18",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a461143_0f3ae9cd",
+        "filename": "libstagefright/codecs/ffmpegdec/vdec/SoftFFmpegVideo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-13T13:06:25Z",
+      "side": 1,
+      "message": "Extra debugging",
+      "revId": "7b497ec7aefda23b1a8f9df40ce4fffccb292c18",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a461143_2f37a5e4",
+        "filename": "libstagefright/codecs/ffmpegdec/vdec/SoftFFmpegVideo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-13T13:06:25Z",
+      "side": 1,
+      "message": "Can delete",
+      "revId": "7b497ec7aefda23b1a8f9df40ce4fffccb292c18",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
