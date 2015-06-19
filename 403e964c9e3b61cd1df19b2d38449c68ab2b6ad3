@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "da36d5c6_1df943c9",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 32
+      },
+      "writtenOn": "2015-06-19T13:17:34Z",
+      "side": 1,
+      "message": "Sort of. Byte seeking needs implemented for MPEG-TS format (and some AVI files), but I haven\u0027t done that yet which is why I left it commented out.",
+      "parentUuid": "da36d5c6_12af72e4",
+      "revId": "403e964c9e3b61cd1df19b2d38449c68ab2b6ad3",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da36d5c6_72b6ee3e",
         "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-06-19T06:25:54Z",
       "side": 1,
       "message": "random newline?",
+      "revId": "403e964c9e3b61cd1df19b2d38449c68ab2b6ad3",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da36d5c6_3df607d8",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 32
+      },
+      "writtenOn": "2015-06-19T13:17:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da36d5c6_72b6ee3e",
       "revId": "403e964c9e3b61cd1df19b2d38449c68ab2b6ad3",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false

@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "da36d5c6_9d0453c7",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 32
+      },
+      "writtenOn": "2015-06-19T13:17:34Z",
+      "side": 0,
+      "message": "Technically, yes, but it\u0027s trivial. The only codec which invokes this path is AAC and it almost never happens because we use Google\u0027s codec. Adding a condition variable to this one is a little more tricky and doesn\u0027t gain much. The rest of the stuff is in the main loop, this is only on startup. Future work maybe :)",
+      "parentUuid": "da36d5c6_32ac76ed",
+      "revId": "8fb98b887bc6cd33633b49c1b1782dac3069a897",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da36d5c6_b29f86b3",
         "filename": "libstagefright/codecs/ffmpegdec/vdec/SoftFFmpegVideo.cpp",
         "patchSetId": 1
