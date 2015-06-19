@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da36d5c6_d2087a2b",
+        "filename": "libstagefright/codecs/ffmpegdec/vdec/SoftFFmpegVideo.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 10621
+      },
+      "writtenOn": "2015-06-19T05:31:25Z",
+      "side": 1,
+      "message": "Maybe get rid of commented out code.",
+      "revId": "4d1478d191eca1362afec3f480bb420280d54bde",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
