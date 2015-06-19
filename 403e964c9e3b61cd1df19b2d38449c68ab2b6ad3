@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da36d5c6_12af72e4",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-19T06:25:54Z",
+      "side": 1,
+      "message": "Dead code",
+      "revId": "403e964c9e3b61cd1df19b2d38449c68ab2b6ad3",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da36d5c6_72b6ee3e",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-19T06:25:54Z",
+      "side": 1,
+      "message": "random newline?",
+      "revId": "403e964c9e3b61cd1df19b2d38449c68ab2b6ad3",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da36d5c6_9281a250",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1570,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-19T06:25:54Z",
+      "side": 1,
+      "message": "These formatting changes can go into the formatting patchset then.",
+      "revId": "403e964c9e3b61cd1df19b2d38449c68ab2b6ad3",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}

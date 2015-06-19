@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da36d5c6_32ac76ed",
+        "filename": "libstagefright/FFmpegExtractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-19T06:25:54Z",
+      "side": 0,
+      "message": "Is this fixme still valid? Or should there be a mCondition.wait here now?",
+      "revId": "8fb98b887bc6cd33633b49c1b1782dac3069a897",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da36d5c6_b29f86b3",
+        "filename": "libstagefright/codecs/ffmpegdec/vdec/SoftFFmpegVideo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-19T06:25:54Z",
+      "side": 0,
+      "message": "It looks like changes to this file should have gone in the \"Refactor decoders\" patchset instead.",
+      "revId": "8fb98b887bc6cd33633b49c1b1782dac3069a897",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
