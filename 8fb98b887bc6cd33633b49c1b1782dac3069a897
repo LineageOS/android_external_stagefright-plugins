@@ -33,6 +33,24 @@
       "revId": "8fb98b887bc6cd33633b49c1b1782dac3069a897",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da36d5c6_5de73b40",
+        "filename": "libstagefright/codecs/ffmpegdec/vdec/SoftFFmpegVideo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 32
+      },
+      "writtenOn": "2015-06-19T12:51:35Z",
+      "side": 0,
+      "message": "Possibly. There were so many issues with the original code that I had trouble breaking it down. Functionally it was good but the original author hasnt touched it since JB. Remember we did this stuff to just get the n1 shipped :) Getting closer to being a powerful feature now though :)",
+      "parentUuid": "da36d5c6_b29f86b3",
+      "revId": "8fb98b887bc6cd33633b49c1b1782dac3069a897",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
