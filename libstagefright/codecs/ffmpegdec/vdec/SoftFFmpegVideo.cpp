@@ -524,27 +524,30 @@ int32_t SoftFFmpegVideo::drainOneOutputBuffer() {
     int64_t pts = AV_NOPTS_VALUE;
     uint8_t *dst = outHeader->pBuffer;
 
+    uint32_t width = outputBufferWidth();
+    uint32_t height = outputBufferHeight();
+
     memset(&pict, 0, sizeof(AVPicture));
     pict.data[0] = dst;
-    pict.data[1] = dst + mWidth * mHeight;
-    pict.data[2] = pict.data[1] + (mWidth / 2  * mHeight / 2);
-    pict.linesize[0] = mWidth;
-    pict.linesize[1] = mWidth / 2;
-    pict.linesize[2] = mWidth / 2;
+    pict.data[1] = dst + width * height;
+    pict.data[2] = pict.data[1] + (width / 2  * height / 2);
+    pict.linesize[0] = width;
+    pict.linesize[1] = width / 2;
+    pict.linesize[2] = width / 2;
 
     int sws_flags = SWS_BICUBIC;
     mImgConvertCtx = sws_getCachedContext(mImgConvertCtx,
-           mCtx->width, mCtx->height, (AVPixelFormat)mFrame->format, mWidth, mHeight,
+           mCtx->width, mCtx->height, (AVPixelFormat)mFrame->format, width, height,
            PIX_FMT_YUV420P, sws_flags, NULL, NULL, NULL);
     if (mImgConvertCtx == NULL) {
         ALOGE("Cannot initialize the conversion context");
         return ERR_SWS_FAILED;
     }
     sws_scale(mImgConvertCtx, mFrame->data, mFrame->linesize,
-            0, mHeight, pict.data, pict.linesize);
+            0, height, pict.data, pict.linesize);
 
     outHeader->nOffset = 0;
-    outHeader->nFilledLen = (mWidth * mHeight * 3) / 2;
+    outHeader->nFilledLen = (width * height * 3) / 2;
     outHeader->nFlags = 0;
     if (mFrame->key_frame) {
         outHeader->nFlags |= OMX_BUFFERFLAG_SYNCFRAME;
@@ -720,9 +723,6 @@ void SoftFFmpegVideo::onPortFlushCompleted(OMX_U32 portIndex) {
 
 void SoftFFmpegVideo::onReset() {
     SoftVideoDecoderOMXComponent::onReset();
-    mFFmpegAlreadyInited = false;
-    mCodecAlreadyOpened = false;
-    mCtx = NULL;
     mSignalledError = false;
     mExtradataReady = false;
 }
