@@ -49,6 +49,10 @@ public:
     static int64_t getAudioClock(void);
     static void setAudioClock(int64_t value);
 
+    static android::SoftOMXComponent* createSoftOMXComponent(
+            const char *name, const OMX_CALLBACKTYPE *callbacks,
+            OMX_PTR appData, OMX_COMPONENTTYPE **component);
+
 protected:
     virtual ~SoftFFmpegAudio();
 
