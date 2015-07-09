@@ -121,6 +121,24 @@
     },
     {
       "key": {
+        "uuid": "5ff73747_517dc46c",
+        "filename": "omx/SoftFFmpegVideo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 32
+      },
+      "writtenOn": "2015-07-09T01:59:28Z",
+      "side": 1,
+      "message": "They are both enums of different types- you can\u0027t extend enums so it\u0027s no longer a valid case.. The old version had everything patched into the stock OMX headers in frameworks/native, but we\u0027re moving those out.",
+      "parentUuid": "5ff73747_717a0089",
+      "revId": "e3685d994954c6bb7d6329b8026b6d601a8df246",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5ff73747_516f04c5",
         "filename": "omx/SoftFFmpegVideo.cpp",
         "patchSetId": 1
