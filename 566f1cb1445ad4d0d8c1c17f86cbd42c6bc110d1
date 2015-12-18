@@ -16,6 +16,24 @@
       "revId": "566f1cb1445ad4d0d8c1c17f86cbd42c6bc110d1",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_de269517",
+        "filename": "omx/SoftFFmpegVideo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 764,
+      "author": {
+        "id": 32
+      },
+      "writtenOn": "2015-12-18T09:16:32Z",
+      "side": 1,
+      "message": "We can put them in the struct that gets looped over in the future if needed. The tests only check for a handful of things, but the data is useful for 3rd party apps. I need to dig up all the specs though.",
+      "parentUuid": "bf659307_9ebeddfd",
+      "revId": "566f1cb1445ad4d0d8c1c17f86cbd42c6bc110d1",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
