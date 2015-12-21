@@ -1682,16 +1682,48 @@ static void adjustMPEG4Confidence(AVFormatContext *ic, float *confidence)
     }
 }
 
+static void adjustMPEG2PSConfidence(AVFormatContext *ic, float *confidence)
+{
+    enum AVCodecID codec_id = AV_CODEC_ID_NONE;
+
+    codec_id = getCodecId(ic, AVMEDIA_TYPE_VIDEO);
+    if ((codec_id == AV_CODEC_ID_HEVC) ||
+        (codec_id != AV_CODEC_ID_NONE
+            && codec_id != AV_CODEC_ID_H264
+            && codec_id != AV_CODEC_ID_MPEG4
+            && codec_id != AV_CODEC_ID_MPEG1VIDEO
+            && codec_id != AV_CODEC_ID_MPEG2VIDEO)) {
+        //the MEDIA_MIMETYPE_CONTAINER_MPEG2TS of confidence is 0.25f
+        ALOGI("[mpeg2ps]video codec(%s), confidence should be larger than MPEG2PSExtractor",
+                avcodec_get_name(codec_id));
+        *confidence = 0.26f;
+    }
+
+    codec_id = getCodecId(ic, AVMEDIA_TYPE_AUDIO);
+    if (codec_id != AV_CODEC_ID_NONE
+            && codec_id != AV_CODEC_ID_AAC
+            && codec_id != AV_CODEC_ID_PCM_S16LE
+            && codec_id != AV_CODEC_ID_PCM_S24LE
+            && codec_id != AV_CODEC_ID_MP1
+            && codec_id != AV_CODEC_ID_MP2
+            && codec_id != AV_CODEC_ID_MP3) {
+        ALOGI("[mpeg2ts]audio codec(%s), confidence should be larger than MPEG2PSExtractor",
+                avcodec_get_name(codec_id));
+        *confidence = 0.261f;
+    }
+}
+
 static void adjustMPEG2TSConfidence(AVFormatContext *ic, float *confidence)
 {
     enum AVCodecID codec_id = AV_CODEC_ID_NONE;
 
     codec_id = getCodecId(ic, AVMEDIA_TYPE_VIDEO);
-    if (codec_id != AV_CODEC_ID_NONE
+    if ((codec_id == AV_CODEC_ID_HEVC) ||
+        (codec_id != AV_CODEC_ID_NONE
             && codec_id != AV_CODEC_ID_H264
             && codec_id != AV_CODEC_ID_MPEG4
             && codec_id != AV_CODEC_ID_MPEG1VIDEO
-            && codec_id != AV_CODEC_ID_MPEG2VIDEO) {
+            && codec_id != AV_CODEC_ID_MPEG2VIDEO)) {
         //the MEDIA_MIMETYPE_CONTAINER_MPEG2TS of confidence is 0.1f
         ALOGI("[mpeg2ts]video codec(%s), confidence should be larger than MPEG2TSExtractor",
                 avcodec_get_name(codec_id));
@@ -1773,6 +1805,8 @@ static void adjustConfidenceIfNeeded(const char *mime,
         adjustMPEG4Confidence(ic, confidence);
     } else if (!strcasecmp(mime, MEDIA_MIMETYPE_CONTAINER_MPEG2TS)) {
         adjustMPEG2TSConfidence(ic, confidence);
+    } else if (!strcasecmp(mime, MEDIA_MIMETYPE_CONTAINER_MPEG2PS)) {
+        adjustMPEG2PSConfidence(ic, confidence);
     } else if (!strcasecmp(mime, MEDIA_MIMETYPE_CONTAINER_MATROSKA)) {
         adjustMKVConfidence(ic, confidence);
     } else {
