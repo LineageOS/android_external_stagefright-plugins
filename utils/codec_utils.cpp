@@ -82,22 +82,6 @@ static sp<ABuffer> MakeMPEGVideoESDS(const sp<ABuffer> &csd) {
     return esds;
 }
 
-//Returns the sample rate based on the sampling frequency index
-static uint32_t getAACSampleRate(const uint8_t sf_index)
-{
-    static const uint32_t sample_rates[] =
-    {
-        96000, 88200, 64000, 48000, 44100, 32000,
-        24000, 22050, 16000, 12000, 11025, 8000
-    };
-
-    if (sf_index < sizeof(sample_rates) / sizeof(sample_rates[0])) {
-        return sample_rates[sf_index];
-    }
-
-    return 0;
-}
-
 //video
 
 //H.264 Video Types
@@ -370,26 +354,31 @@ sp<MetaData> setAACFormat(AVCodecContext *avctx)
 {
     ALOGV("AAC");
 
-    uint32_t sr;
     const uint8_t *header;
-    uint8_t profile, sf_index, channel;
+    int32_t profile = 0, sf_index = -1, channel = 0;
 
     header = avctx->extradata;
     CHECK(header != NULL);
 
-    // AudioSpecificInfo follows
-    // oooo offf fccc c000
-    // o - audioObjectType
-    // f - samplingFreqIndex
-    // c - channelConfig
-    profile = ((header[0] & 0xf8) >> 3) - 1;
-    sf_index = (header[0] & 0x07) << 1 | (header[1] & 0x80) >> 7;
-    sr = getAACSampleRate(sf_index);
-    if (sr == 0) {
+    static const int32_t kSamplingFreq[] = {
+        96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050,
+        16000, 12000, 11025, 8000
+    };
+
+    profile = avctx->profile; // same as spec, with zero offset
+
+    for (uint32_t i = 0; i < ARRAY_SIZE(kSamplingFreq); i++) {
+        if (kSamplingFreq[i] == avctx->sample_rate) {
+            sf_index = i;
+            break;
+        }
+    }
+    if (sf_index < 0) {
         ALOGE("unsupport the aac sample rate");
         return NULL;
     }
-    channel = (header[1] >> 3) & 0xf;
+
+    channel = avctx->channels;
     ALOGV("aac profile: %d, sf_index: %d, channel: %d", profile, sf_index, channel);
 
     sp<MetaData> meta = MakeAACCodecSpecificData(profile, sf_index, channel);
