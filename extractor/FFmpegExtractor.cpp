@@ -53,6 +53,8 @@
 #define EXTRACTOR_MAX_PROBE_PACKETS 200
 #define FF_MAX_EXTRADATA_SIZE ((1 << 28) - FF_INPUT_BUFFER_PADDING_SIZE)
 
+#define MAX_PROBE_SIZE (1 * 1024 * 1024) // max probe size in bytes
+
 #define WAIT_KEY_PACKET_AFTER_SEEK 1
 #define SUPPOURT_UNKNOWN_FORMAT    1
 
@@ -1927,6 +1929,8 @@ static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool fa
         // half a second appears to be enough for the rest
         ic->max_analyze_duration = 500 * AV_TIME_BASE / 1000; // 500 msec
     }
+
+    ic->probesize = MAX_PROBE_SIZE;
 
     opts = setup_find_stream_info_opts(ic, codec_opts);
     nb_streams = ic->nb_streams;
