@@ -1145,18 +1145,20 @@ void FFmpegExtractor::readerEntry() {
             Mutex::Autolock _l(mLock);
             ALOGV("readerEntry, mSeekIdx: %d mSeekPos: %lld (%lld/%lld)", mSeekIdx, mSeekPos, mSeekMin, mSeekMax);
             ret = avformat_seek_file(mFormatCtx, -1, mSeekMin, mSeekPos, mSeekMax, 0);
+            if (mAudioStreamIdx >= 0) {
+                packet_queue_flush(&mAudioQ);
+                packet_queue_put(&mAudioQ, &mAudioQ.flush_pkt);
+            }
+            if (mVideoStreamIdx >= 0) {
+                packet_queue_flush(&mVideoQ);
+                packet_queue_put(&mVideoQ, &mVideoQ.flush_pkt);
+            }
+
             if (ret < 0) {
                 ALOGE("%s: error while seeking", mFormatCtx->filename);
-            } else {
-                if (mAudioStreamIdx >= 0) {
-                    packet_queue_flush(&mAudioQ);
-                    packet_queue_put(&mAudioQ, &mAudioQ.flush_pkt);
-                }
-                if (mVideoStreamIdx >= 0) {
-                    packet_queue_flush(&mVideoQ);
-                    packet_queue_put(&mVideoQ, &mVideoQ.flush_pkt);
-                }
+                break;
             }
+
             mSeekIdx = -1;
             eof = false;
             mCondition.signal();
