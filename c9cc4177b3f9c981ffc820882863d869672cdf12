@@ -16,6 +16,58 @@
       "revId": "c9cc4177b3f9c981ffc820882863d869672cdf12",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f7f9b97_93bc93bc",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1685,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-24T03:57:27Z",
+      "side": 1,
+      "message": "Wish there was a nicer way so we don\u0027t duplicate as much code.",
+      "parentUuid": "7f7f9b97_f3962795",
+      "revId": "c9cc4177b3f9c981ffc820882863d869672cdf12",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f7f9b97_d3a8cb78",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1698,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-24T03:57:27Z",
+      "side": 1,
+      "message": "Why 0.26f instead of 0.11f?",
+      "revId": "c9cc4177b3f9c981ffc820882863d869672cdf12",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f7f9b97_b3abcf73",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1709,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-24T03:57:27Z",
+      "side": 1,
+      "message": "mpeg2ps",
+      "revId": "c9cc4177b3f9c981ffc820882863d869672cdf12",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
