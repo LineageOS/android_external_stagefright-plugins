@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "7f7f9b97_33e6dfea",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1698,
+      "author": {
+        "id": 13956
+      },
+      "writtenOn": "2015-12-24T04:00:59Z",
+      "side": 1,
+      "message": "Since in Android the confidence for mpeg2ps is 0.25,\nwe need to be greater than that.\n\nSee\nmpeg2ts/MPEG2PSExtractor.cpp:    *confidence \u003d 0.25f;",
+      "parentUuid": "7f7f9b97_d3a8cb78",
+      "revId": "c9cc4177b3f9c981ffc820882863d869672cdf12",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f7f9b97_b3abcf73",
         "filename": "extractor/FFmpegExtractor.cpp",
         "patchSetId": 5
@@ -65,6 +83,24 @@
       "writtenOn": "2015-12-24T03:57:27Z",
       "side": 1,
       "message": "mpeg2ps",
+      "revId": "c9cc4177b3f9c981ffc820882863d869672cdf12",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f7f9b97_93e1f3d3",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1709,
+      "author": {
+        "id": 13956
+      },
+      "writtenOn": "2015-12-24T04:00:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f7f9b97_b3abcf73",
       "revId": "c9cc4177b3f9c981ffc820882863d869672cdf12",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
