@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-//#define LOG_NDEBUG 0
+#define LOG_NDEBUG 0
 #define LOG_TAG "SoftFFmpegAudio"
 #include <utils/Log.h>
 #include <cutils/properties.h>
@@ -31,8 +31,8 @@
 #include <OMX_AudioExt.h>
 #include <OMX_IndexExt.h>
 
-#define DEBUG_PKT 0
-#define DEBUG_FRM 0
+#define DEBUG_PKT 1
+#define DEBUG_FRM 1
 
 namespace android {
 
@@ -1262,38 +1262,39 @@ void SoftFFmpegAudio::drainOneOutputBuffer() {
     CHECK(outInfo != NULL);
     OMX_BUFFERHEADERTYPE *outHeader = outInfo->mHeader;
     List<BufferInfo *> &inQueue = getPortQueue(kInputPortIndex);
-    BufferInfo *inInfo = *inQueue.begin();
-    OMX_BUFFERHEADERTYPE *inHeader = NULL;
-
-    if (inHeader != NULL) {
-        inHeader = inInfo->mHeader;
-    }
-
-    CHECK_GT(mResampledDataSize, 0);
-
-    size_t copy = mResampledDataSize;
-    if (mResampledDataSize > kOutputBufferSize) {
-        copy = kOutputBufferSize;
-    }
 
     outHeader->nOffset = 0;
-    outHeader->nFilledLen = copy;
-    outHeader->nTimeStamp = getAudioClock();
-    memcpy(outHeader->pBuffer, mResampledData, copy);
+    outHeader->nTimeStamp = SF_NOPTS_VALUE;
     outHeader->nFlags = 0;
+    outHeader->nFilledLen = 0;
 
-    //update mResampledSize
-    mResampledData += copy;
-    mResampledDataSize -= copy;
+    if (mResampledDataSize > 0 && !inQueue.empty()) {
+        BufferInfo *inInfo = *inQueue.begin();
+        OMX_BUFFERHEADERTYPE *inHeader = inInfo->mHeader;
+        if (inHeader != NULL) {
 
-    //update audio pts
-    size_t frames = copy / (av_get_bytes_per_sample(mAudioTgtFmt) * mAudioTgtChannels);
-    setAudioClock(getAudioClock() + ((frames * 1000000ll) / mAudioTgtFreq));
+            size_t copy = mResampledDataSize;
+            if (mResampledDataSize > kOutputBufferSize) {
+                copy = kOutputBufferSize;
+            }
+            memcpy(outHeader->pBuffer, mResampledData, copy);
 
+            outHeader->nFilledLen = copy;
+
+            //update mResampledSize
+            mResampledData += copy;
+            mResampledDataSize -= copy;
+
+            //update audio pts
+            size_t frames = copy / (av_get_bytes_per_sample(mAudioTgtFmt) * mAudioTgtChannels);
+            setAudioClock(getAudioClock() + ((frames * 1000000ll) / mAudioTgtFreq));
+            outHeader->nTimeStamp = getAudioClock();
 #if DEBUG_FRM
-    ALOGV("ffmpeg audio decoder, fill out buffer, copy:%u, pts: %lld, clock: %lld",
-            copy, outHeader->nTimeStamp, getAudioClock());
+            ALOGV("ffmpeg audio decoder, fill out buffer, copy:%u, pts: %lld, clock: %lld, size: %d",
+                    copy, outHeader->nTimeStamp, getAudioClock(), mResampledDataSize);
 #endif
+        }
+    }
 
     outQueue.erase(outQueue.begin());
     outInfo->mOwnedByUs = false;
@@ -1330,7 +1331,7 @@ void SoftFFmpegAudio::drainAllOutputBuffers() {
         return;
     }
 
-    if(!(mCtx->codec->capabilities & CODEC_CAP_DELAY)) {
+    if (!avcodec_is_open(mCtx) || !(mCtx->codec->capabilities & CODEC_CAP_DELAY)) {
         drainEOSOutputBuffer();
         mEOSStatus = OUTPUT_FRAMES_FLUSHED;
         return;
@@ -1372,58 +1373,58 @@ void SoftFFmpegAudio::onQueueFilled(OMX_U32 /* portIndex */) {
     List<BufferInfo *> &inQueue = getPortQueue(kInputPortIndex);
     List<BufferInfo *> &outQueue = getPortQueue(kOutputPortIndex);
 
-    while (((mEOSStatus != INPUT_DATA_AVAILABLE) || !inQueue.empty())
+    while (((mEOSStatus != INPUT_DATA_AVAILABLE)
+            || !inQueue.empty())
             && !outQueue.empty()) {
+
+        if (!inQueue.empty()) {
+            inInfo   = *inQueue.begin();
+            inHeader = inInfo->mHeader;
+        }
 
         if (mEOSStatus == INPUT_EOS_SEEN) {
             drainAllOutputBuffers();
             return;
         }
 
-        inInfo   = *inQueue.begin();
-        inHeader = inInfo->mHeader;
-
-        if (inHeader->nFlags & OMX_BUFFERFLAG_EOS) {
-            ALOGD("ffmpeg audio decoder empty eos inbuf");
-            inQueue.erase(inQueue.begin());
-            inInfo->mOwnedByUs = false;
-            notifyEmptyBufferDone(inHeader);
-            mEOSStatus = INPUT_EOS_SEEN;
-            continue;
-        }
-
-        if (inHeader->nFlags & OMX_BUFFERFLAG_CODECCONFIG) {
-            if (handleExtradata() != ERR_OK) {
-                notify(OMX_EventError, OMX_ErrorUndefined, 0, NULL);
-                mSignalledError = true;
-                return;
+        if (inHeader) {
+            if (inHeader->nFlags & OMX_BUFFERFLAG_EOS) {
+                ALOGD("ffmpeg audio decoder empty eos inbuf");
+                mEOSStatus = INPUT_EOS_SEEN;
             }
-            continue;
-        }
 
-        if (!mCodecAlreadyOpened) {
-            if (openDecoder() != ERR_OK) {
-                notify(OMX_EventError, OMX_ErrorUndefined, 0, NULL);
-                mSignalledError = true;
-                return;
-            }
-        }
-
-        if (mResampledDataSize == 0) {
-            int32_t err = decodeAudio();
-            if (err < ERR_OK) {
-                notify(OMX_EventError, OMX_ErrorUndefined, 0, NULL);
-                mSignalledError = true;
-                return;
-            } else if (err == ERR_NO_FRM) {
-                CHECK_EQ(mResampledDataSize, 0);
+            if (inHeader->nFlags & OMX_BUFFERFLAG_CODECCONFIG) {
+                if (handleExtradata() != ERR_OK) {
+                    notify(OMX_EventError, OMX_ErrorUndefined, 0, NULL);
+                    mSignalledError = true;
+                    return;
+                }
                 continue;
-            } else {
-                CHECK_EQ(err, ERR_OK);
             }
-        }
 
-        if (mResampledDataSize > 0) {
+            if (mEOSStatus == INPUT_DATA_AVAILABLE) {
+                if (!mCodecAlreadyOpened) {
+                    if (openDecoder() != ERR_OK) {
+                        notify(OMX_EventError, OMX_ErrorUndefined, 0, NULL);
+                        mSignalledError = true;
+                        return;
+                    }
+                }
+
+                if (mResampledDataSize == 0) {
+                    int32_t err = decodeAudio();
+                    if (err < ERR_OK) {
+                        notify(OMX_EventError, OMX_ErrorUndefined, 0, NULL);
+                        mSignalledError = true;
+                        return;
+                    } else if (err == ERR_NO_FRM) {
+                        CHECK_EQ(mResampledDataSize, 0);
+                        continue;
+                    } else {
+                        CHECK_EQ(err, ERR_OK);
+                    }
+                }
+            }
             drainOneOutputBuffer();
         }
     }
@@ -1489,11 +1490,20 @@ void SoftFFmpegAudio::setAudioClock(int64_t ticks) {
 }
 
 void SoftFFmpegAudio::onReset() {
+    ALOGV("onReset() called");
     enum AVCodecID codecID = mCtx->codec_id;
     deInitDecoder();
-    initDecoder(codecID);
     mSignalledError = false;
     mOutputPortSettingsChange = NONE;
+    mExtradataReady = false;
+    mIgnoreExtradata = false;
+    mEOSStatus = INPUT_DATA_AVAILABLE;
+    mResampledData = NULL;
+    mResampledDataSize = 0;
+    mInputBufferSize = 0;
+    setAudioClock(0);
+    mCodecAlreadyOpened = false;
+    initDecoder(codecID);
 }
 
 SoftOMXComponent* SoftFFmpegAudio::createSoftOMXComponent(
