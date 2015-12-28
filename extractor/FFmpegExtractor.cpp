@@ -2051,10 +2051,21 @@ bool SniffFFMPEG(
 
     float newConfidence = 0.08f;
 
-    ALOGV("SniffFFMPEG (initial confidence: %f)", *confidence);
+    ALOGV("SniffFFMPEG (initial confidence: %f, mime: %s)", *confidence,
+            mimeType == NULL ? NULL : (*mimeType).string());
 
-    if (*confidence > 0.8f) {
-        return false;
+    // This is a heavyweight sniffer, don't invoke it if Stagefright knows
+    // what it is doing already.
+    if (mimeType != NULL && confidence != NULL) {
+        if (*confidence > 0.8f) {
+            return false;
+        } else if (*confidence >= 0.2f) {
+            // System sounds, don't bother
+            if (!strcmp(*mimeType, MEDIA_MIMETYPE_AUDIO_MPEG) ||
+                    !strcmp(*mimeType, MEDIA_MIMETYPE_AUDIO_VORBIS)) {
+                return false;
+            }
+        }
     }
 
     *meta = new AMessage;
