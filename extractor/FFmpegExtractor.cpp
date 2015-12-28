@@ -1928,7 +1928,8 @@ static const char *findMatchingContainer(const char *name)
     return container;
 }
 
-static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool fastMPEG4)
+static const char *SniffFFMPEGCommon(const char *url, float *confidence,
+        bool isStreaming, const char *hint)
 {
     int err = 0;
     size_t i = 0;
@@ -1958,26 +1959,32 @@ static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool fa
         goto fail;
     }
 
-    /* MPEG4 has its own Extractor, and it's much faster than
-     * this. Give the media a fast peek just in case, but we
-     * want to keep it short to avoid jank with processing
-     * locally-recorded files (5 seconds to generate a thumb
-     * isn't acceptable :) )
+    if (ic->iformat != NULL && ic->iformat->name != NULL) {
+        container = findMatchingContainer(ic->iformat->name);
+    }
+
+    /* If we got a hint that the file is audio, we can do a quick test on it
+     * before proceeding. This gives us a fast out but also catches files that
+     * MP3Extractor screwed up.
      */
-    if (ic->iformat != NULL && ic->iformat->name != NULL &&
-        findMatchingContainer(ic->iformat->name) != NULL &&
-        !strcasecmp(findMatchingContainer(ic->iformat->name),
-        MEDIA_MIMETYPE_CONTAINER_MPEG4)) {
-        if (fastMPEG4) {
-            container = findMatchingContainer(ic->iformat->name);
+    if (container != NULL) {
+        if (!strncasecmp("audio/", hint, 6) && !strcasecmp(container, hint)) {
+            ALOGD("Container format agrees with prior sniff, returning early.");
             goto fail;
-        } else {
-            // Never spend more than 100 msec on mpeg4
-            ic->max_analyze_duration = 100 * AV_TIME_BASE / 1000; // 100 msec
+        }
+
+        /* MPEG4 has its own Extractor, and it's much faster than
+         * this. Give the media a fast peek just in case, but we
+         * want to keep it short to avoid jank with processing
+         * locally-recorded files (5 seconds to generate a thumb
+         * isn't acceptable :) )
+         */
+        if (isStreaming && !strcasecmp(container, MEDIA_MIMETYPE_CONTAINER_MPEG4)) {
+            ic->max_analyze_duration2 = 100 * AV_TIME_BASE / 1000; // 100 msec
         }
     } else {
         // half a second appears to be enough for the rest
-        ic->max_analyze_duration = 500 * AV_TIME_BASE / 1000; // 500 msec
+        ic->max_analyze_duration2 = 500 * AV_TIME_BASE / 1000; // 500 msec
     }
 
     opts = setup_find_stream_info_opts(ic, codec_opts);
@@ -2015,7 +2022,7 @@ fail:
 }
 
 static const char *BetterSniffFFMPEG(const sp<DataSource> &source,
-        float *confidence, sp<AMessage> meta)
+        float *confidence, sp<AMessage> meta, const char *hint)
 {
     const char *ret = NULL;
     char url[PATH_MAX] = {0};
@@ -2025,7 +2032,8 @@ static const char *BetterSniffFFMPEG(const sp<DataSource> &source,
     // pass the addr of smart pointer("source")
     snprintf(url, sizeof(url), "android-source:%p", source.get());
 
-    ret = SniffFFMPEGCommon(url, confidence, (source->flags() & DataSource::kIsCachingDataSource));
+    ret = SniffFFMPEGCommon(url, confidence,
+            (source->flags() & DataSource::kIsCachingDataSource), hint);
     if (ret) {
         meta->setString("extended-extractor-url", url);
     }
@@ -2034,7 +2042,7 @@ static const char *BetterSniffFFMPEG(const sp<DataSource> &source,
 }
 
 static const char *LegacySniffFFMPEG(const sp<DataSource> &source,
-         float *confidence, sp<AMessage> meta)
+         float *confidence, sp<AMessage> meta, const char *hint)
 {
     const char *ret = NULL;
     char url[PATH_MAX] = {0};
@@ -2049,7 +2057,7 @@ static const char *LegacySniffFFMPEG(const sp<DataSource> &source,
     // pass the addr of smart pointer("source") + file name
     snprintf(url, sizeof(url), "android-source:%p|file:%s", source.get(), uri.string());
 
-    ret = SniffFFMPEGCommon(url, confidence, false);
+    ret = SniffFFMPEGCommon(url, confidence, false, hint);
     if (ret) {
         meta->setString("extended-extractor-url", url);
     }
@@ -2062,30 +2070,24 @@ bool SniffFFMPEG(
         sp<AMessage> *meta) {
 
     float newConfidence = 0.08f;
+    const char *hint = mimeType == NULL ? NULL : (*mimeType).string();
 
-    ALOGV("SniffFFMPEG (initial confidence: %f, mime: %s)", *confidence,
-            mimeType == NULL ? NULL : (*mimeType).string());
+    ALOGV("SniffFFMPEG (initial confidence: %f, mime: %s)", *confidence, hint);
 
     // This is a heavyweight sniffer, don't invoke it if Stagefright knows
     // what it is doing already.
     if (mimeType != NULL && confidence != NULL) {
         if (*confidence > 0.8f) {
             return false;
-        } else if (*confidence >= 0.2f) {
-            // System sounds, don't bother
-            if (!strcmp(*mimeType, MEDIA_MIMETYPE_AUDIO_MPEG) ||
-                    !strcmp(*mimeType, MEDIA_MIMETYPE_AUDIO_VORBIS)) {
-                return false;
-            }
         }
     }
 
     *meta = new AMessage;
 
-    const char *container = BetterSniffFFMPEG(source, &newConfidence, *meta);
+    const char *container = BetterSniffFFMPEG(source, &newConfidence, *meta, hint);
     if (!container) {
         ALOGW("sniff through BetterSniffFFMPEG failed, try LegacySniffFFMPEG");
-        container = LegacySniffFFMPEG(source, &newConfidence, *meta);
+        container = LegacySniffFFMPEG(source, &newConfidence, *meta, hint);
         if (container) {
             ALOGV("sniff through LegacySniffFFMPEG success");
         }
