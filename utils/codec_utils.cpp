@@ -519,5 +519,49 @@ int getDivXVersion(AVCodecContext *avctx)
     return -1;
 }
 
+status_t parseMetadataTags(AVFormatContext *ctx, const sp<MetaData> &meta) {
+    if (meta == NULL || ctx == NULL) {
+        return NO_INIT;
+    }
+
+    AVDictionary *dict = ctx->metadata;
+    if (dict == NULL) {
+        return NO_INIT;
+    }
+
+
+    struct MetadataMapping {
+        const char *from;
+        int to;
+    };
+
+    static const MetadataMapping kMap[] = {
+        { "track", kKeyCDTrackNumber },
+        { "disc", kKeyDiscNumber },
+        { "album", kKeyAlbum },
+        { "artist", kKeyArtist },
+        { "album_artist", kKeyAlbumArtist },
+        { "composer", kKeyComposer },
+        { "date", kKeyDate },
+        { "genre", kKeyGenre },
+        { "title", kKeyTitle },
+        { "year", kKeyYear },
+        { "compilation", kKeyCompilation },
+        { "location", kKeyLocation },
+    };
+
+    static const size_t kNumEntries = sizeof(kMap) / sizeof(kMap[0]);
+
+    for (size_t i = 0; i < kNumEntries; ++i) {
+        AVDictionaryEntry *entry = av_dict_get(dict, kMap[i].from, NULL, 0);
+        if (entry != NULL) {
+            ALOGV("found key %s with value %s", entry->key, entry->value);
+            meta->setCString(kMap[i].to, entry->value);
+        }
+    }
+
+    return OK;
+}
+
 }  // namespace android
 
