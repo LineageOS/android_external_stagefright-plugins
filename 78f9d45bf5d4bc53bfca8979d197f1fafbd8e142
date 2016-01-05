@@ -16,6 +16,24 @@
       "revId": "78f9d45bf5d4bc53bfca8979d197f1fafbd8e142",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fce034c_5eaa9385",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 32
+      },
+      "writtenOn": "2016-01-05T07:10:53Z",
+      "side": 1,
+      "message": "I\u0027m not really sure there is much that can actually be done other than logging a message. It\u0027s really a \"this should never happen\" kind of scenario.",
+      "parentUuid": "3fce034c_bd062020",
+      "revId": "78f9d45bf5d4bc53bfca8979d197f1fafbd8e142",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
