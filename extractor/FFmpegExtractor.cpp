@@ -94,7 +94,6 @@ private:
     mutable Mutex mLock;
 
     bool mIsAVC;
-    bool mIsHEVC;
     size_t mNALLengthSize;
     bool mNal2AnnexB;
 
@@ -1307,7 +1306,6 @@ FFmpegSource::FFmpegSource(
     : mExtractor(extractor),
       mTrackIndex(index),
       mIsAVC(false),
-      mIsHEVC(false),
       mNal2AnnexB(false),
       mStream(mExtractor->mTracks.itemAt(index).mStream),
       mQueue(mExtractor->mTracks.itemAt(index).mQueue),
@@ -1338,26 +1336,6 @@ FFmpegSource::FFmpegSource(
             mNALLengthSize = 1 + (ptr[4] & 3);
 
             ALOGV("the stream is AVC, the length of a NAL unit: %d", mNALLengthSize);
-
-            mNal2AnnexB = true;
-        } else if (avctx->codec_id == AV_CODEC_ID_HEVC
-                && avctx->extradata_size > 0) {
-            mIsHEVC = true;
-
-            uint32_t type;
-            const void *data;
-            size_t size;
-            CHECK(meta->findData(kKeyHVCC, &type, &data, &size));
-
-            const uint8_t *ptr = (const uint8_t *)data;
-
-            CHECK(size >= 7);
-            //CHECK_EQ((unsigned)ptr[0], 1u);  // configurationVersion == 1
-
-            // The number of bytes used to encode the length of a NAL unit.
-            mNALLengthSize = 1 + (ptr[21] & 3);
-
-            ALOGD("the stream is HEVC, the length of a NAL unit: %d", mNALLengthSize);
 
             mNal2AnnexB = true;
         }
@@ -1473,7 +1451,7 @@ retry:
     mediaBuffer->set_range(0, pkt.size);
 
     //copy data
-    if ((mIsAVC || mIsHEVC) && mNal2AnnexB) {
+    if (mIsAVC && mNal2AnnexB) {
         /* This only works for NAL sizes 3-4 */
         CHECK(mNALLengthSize == 3 || mNALLengthSize == 4);
 
