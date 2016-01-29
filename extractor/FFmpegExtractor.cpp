@@ -1529,6 +1529,17 @@ retry:
         mLastPTS = timeUs;
     }
 
+    // Negative timestamp will cause crash for media_server
+    // in OMXCodec.cpp CHECK(lastBufferTimeUs >= 0).
+    // And we should not get negative timestamp
+    if (timeUs < 0) {
+        ALOGE("negative timestamp encounter: %" PRId64, timeUs);
+        mediaBuffer->release();
+        mediaBuffer = NULL;
+        av_free_packet(&pkt);
+        return ERROR_MALFORMED;
+    }
+
 #if DEBUG_PKT
     if (pktTS != AV_NOPTS_VALUE)
         ALOGV("read %s pkt, size:%d, key:%d, pktPTS: %lld, pts:%lld, dts:%lld, timeUs[-startTime]:%lld us (%.2f secs) start_time=%lld",
