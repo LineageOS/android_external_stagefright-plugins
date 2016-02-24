@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ffb9cba7_e635d7f8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 13956
+      },
+      "writtenOn": "2016-02-24T04:37:49Z",
+      "side": 1,
+      "message": "This gives background why the need to skip some more media parsing here. And what is the currently skipped.",
+      "parentUuid": "ffb9cba7_0676eb07",
+      "revId": "00fb96b270135f7f047b767adace2beb150601a0",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffb9cba7_667327e9",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "ffb9cba7_06590b59",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 13956
+      },
+      "writtenOn": "2016-02-24T04:37:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffb9cba7_667327e9",
+      "range": {
+        "startLine": 14,
+        "startChar": 40,
+        "endLine": 14,
+        "endChar": 52
+      },
+      "revId": "00fb96b270135f7f047b767adace2beb150601a0",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffb9cba7_06802b8b",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -53,6 +95,30 @@
       "writtenOn": "2016-02-24T04:26:55Z",
       "side": 1,
       "message": "Stagefright",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 22
+      },
+      "revId": "00fb96b270135f7f047b767adace2beb150601a0",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_26568f2b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 13956
+      },
+      "writtenOn": "2016-02-24T04:37:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffb9cba7_06802b8b",
       "range": {
         "startLine": 15,
         "startChar": 10,
