@@ -19,6 +19,52 @@
     },
     {
       "key": {
+        "uuid": "ffb9cba7_667327e9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-24T04:26:55Z",
+      "side": 1,
+      "message": "Stagefright",
+      "range": {
+        "startLine": 14,
+        "startChar": 40,
+        "endLine": 14,
+        "endChar": 52
+      },
+      "revId": "00fb96b270135f7f047b767adace2beb150601a0",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_06802b8b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-24T04:26:55Z",
+      "side": 1,
+      "message": "Stagefright",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 22
+      },
+      "revId": "00fb96b270135f7f047b767adace2beb150601a0",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffb9cba7_865bbb85",
         "filename": "extractor/FFmpegExtractor.cpp",
         "patchSetId": 1
@@ -66,6 +112,24 @@
       "side": 1,
       "message": "What the commit message is just to mentioned that:\nOnly \"midi/drm extractor from stageflinger\" which has  a confidence level \u003e\u003d0.8f, that will be in this code path. (drm extractor to be exact, since \u003e 0.8f) All other media need to do a 2nd parsing in ffmpeg/",
       "parentUuid": "ffb9cba7_e6f4f75d",
+      "revId": "00fb96b270135f7f047b767adace2beb150601a0",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_467623db",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2156,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-24T04:26:55Z",
+      "side": 1,
+      "message": "Yeah but that doesn\u0027t have anything to do with this commit?",
+      "parentUuid": "ffb9cba7_a6a35f4f",
       "revId": "00fb96b270135f7f047b767adace2beb150601a0",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
