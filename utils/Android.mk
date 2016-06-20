@@ -34,6 +34,11 @@ else
 LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)
 endif
 
+ifeq ($(BOARD_FFMPEG_32BIT_ONLY),true)
+LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)
+LOCAL_32_BIT_ONLY := true
+endif
+
 LOCAL_CFLAGS += -D__STDC_CONSTANT_MACROS=1
 
 # Workaround for inline assembly tricks in FFMPEG which don't play nice with

@@ -42,6 +42,11 @@ else
 LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)
 endif
 
+ifeq ($(BOARD_FFMPEG_32BIT_ONLY),true)
+LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)
+LOCAL_32_BIT_ONLY := true
+endif
+
 ifneq ($(filter arm arm64,$(TARGET_ARCH)),)
 	LOCAL_CFLAGS += -Wno-psabi
 endif
