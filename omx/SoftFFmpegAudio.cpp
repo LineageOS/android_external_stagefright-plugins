@@ -1518,7 +1518,7 @@ int64_t SoftFFmpegAudio::getAudioClock() {
         sAudioClock = (int64_t*) malloc(sizeof(int64_t));
         *sAudioClock = 0;
     }
-    ALOGV("getAudioClock: %lld", *sAudioClock);
+    ALOGV("getAudioClock: %" PRId64, *sAudioClock);
     return *sAudioClock;
 }
 
