@@ -1139,8 +1139,7 @@ void FFmpegExtractor::readerEntry() {
     mLock.lock();
 
     pid_t tid  = gettid();
-    androidSetThreadPriority(tid,
-            mVideoStreamIdx >= 0 ? ANDROID_PRIORITY_NORMAL : ANDROID_PRIORITY_AUDIO);
+    androidSetThreadPriority(tid, ANDROID_PRIORITY_FOREGROUND - 2);
     prctl(PR_SET_NAME, (unsigned long)"FFmpegExtractor Thread", 0, 0, 0);
 
     ALOGV("FFmpegExtractor wait for signal");
