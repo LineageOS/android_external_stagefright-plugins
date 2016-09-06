@@ -602,5 +602,13 @@ status_t parseMetadataTags(AVFormatContext *ctx, const sp<MetaData> &meta) {
     return OK;
 }
 
+AudioEncoding sampleFormatToEncoding(AVSampleFormat fmt) {
+    return kAudioEncodingPcm16bit;
+}
+
+AVSampleFormat encodingToSampleFormat(AudioEncoding encoding) {
+    return AV_SAMPLE_FMT_S16;
+}
+
 }  // namespace android
 

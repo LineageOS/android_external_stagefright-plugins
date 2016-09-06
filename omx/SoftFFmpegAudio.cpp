@@ -25,8 +25,8 @@
 
 #include <media/stagefright/foundation/ADebug.h>
 #include <media/stagefright/foundation/hexdump.h>
+#include <media/stagefright/ACodec.h>
 #include <media/stagefright/MediaDefs.h>
-#include <media/stagefright/OMXCodec.h>
 
 #include <OMX_AudioExt.h>
 #include <OMX_IndexExt.h>
@@ -290,7 +290,7 @@ OMX_ERRORTYPE SoftFFmpegAudio::internalGetParameter(
                 profile->nBitPerSample = 32;
             }
 
-            if (getOMXChannelMapping(mAudioTgtChannels, profile->eChannelMapping) != OK) {
+            if (ACodec::getOMXChannelMapping(mAudioTgtChannels, profile->eChannelMapping) != OK) {
                 return OMX_ErrorNone;
             }
 
