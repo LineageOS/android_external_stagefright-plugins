@@ -2192,6 +2192,11 @@ bool SniffFFMPEG(
         ALOGV("sniff through BetterSniffFFMPEG success");
     }
 
+    if (mimeType != NULL && container != NULL && *mimeType == container) {
+        ALOGD("SniffFFMPEG sniffed the same thing as StageFright, use their extractor instead");
+        container = NULL;
+    }
+
     if (container == NULL) {
         ALOGD("SniffFFMPEG failed to sniff this source");
         (*meta)->clear();
