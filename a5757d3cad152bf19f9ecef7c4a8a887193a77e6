@@ -22,6 +22,30 @@
       "revId": "a5757d3cad152bf19f9ecef7c4a8a887193a77e6",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa82b9bf_6e879410",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2197,
+      "author": {
+        "id": 6351
+      },
+      "writtenOn": "2017-05-30T08:17:22Z",
+      "side": 1,
+      "message": "Yeah, you\u0027re right.  The double log message is pretty confusing as well.  Will turn this into kernel style goto instead.",
+      "parentUuid": "fa82b9bf_530cbb94",
+      "range": {
+        "startLine": 2197,
+        "startChar": 8,
+        "endLine": 2197,
+        "endChar": 25
+      },
+      "revId": "a5757d3cad152bf19f9ecef7c4a8a887193a77e6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
