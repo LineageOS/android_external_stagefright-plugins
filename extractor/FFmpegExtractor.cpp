@@ -1715,6 +1715,8 @@ static bool isCodecSupportedByStagefright(enum AVCodecID codec_id)
     case AV_CODEC_ID_PCM_U8:
     case AV_CODEC_ID_PCM_S16LE:
     case AV_CODEC_ID_PCM_S24LE:
+    case AV_CODEC_ID_OPUS:
+    // case AV_CODEC_ID_FLAC: removed because it is only partially supported and we want to own it
         supported = true;
         break;
 
