@@ -1880,14 +1880,16 @@ static void adjustMKVConfidence(AVFormatContext *ic, float *confidence)
     }
 }
 
-static void adjustCodecConfidence(AVFormatContext *ic, float *confidence)
+static void adjustCodecConfidence(AVFormatContext *ic, float *confidence, bool *sfSupported)
 {
     enum AVCodecID codec_id = AV_CODEC_ID_NONE;
 
+    *sfSupported = true;
     codec_id = getCodecId(ic, AVMEDIA_TYPE_VIDEO);
     if (codec_id != AV_CODEC_ID_NONE) {
         if (!isCodecSupportedByStagefright(codec_id)) {
             *confidence = 0.88f;
+            *sfSupported = false;
         }
     }
 
@@ -1895,6 +1897,7 @@ static void adjustCodecConfidence(AVFormatContext *ic, float *confidence)
     if (codec_id != AV_CODEC_ID_NONE) {
         if (!isCodecSupportedByStagefright(codec_id)) {
             *confidence = 0.88f;
+            *sfSupported = false;
         }
     }
 
@@ -1906,7 +1909,7 @@ static void adjustCodecConfidence(AVFormatContext *ic, float *confidence)
 
 //TODO need more checks
 static void adjustConfidenceIfNeeded(const char *mime,
-        AVFormatContext *ic, float *confidence, bool isStreaming)
+        AVFormatContext *ic, float *confidence, bool isStreaming, bool *sfSupported)
 {
     //1. check mime
     if (!strcasecmp(mime, MEDIA_MIMETYPE_CONTAINER_MPEG4)) {
@@ -1924,7 +1927,7 @@ static void adjustConfidenceIfNeeded(const char *mime,
     }
 
     //2. check codec
-    adjustCodecConfidence(ic, confidence);
+    adjustCodecConfidence(ic, confidence, sfSupported);
 }
 
 static void adjustContainerIfNeeded(const char **mime, AVFormatContext *ic)
@@ -2013,7 +2016,7 @@ static const char *findMatchingContainer(const char *name)
     return container;
 }
 
-static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool isStreaming)
+static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool *sfSupported, bool isStreaming)
 {
     int err = 0;
     size_t i = 0;
@@ -2096,7 +2099,7 @@ static const char *SniffFFMPEGCommon(const char *url, float *confidence, bool is
     container = findMatchingContainer(ic->iformat->name);
     if (container) {
         adjustContainerIfNeeded(&container, ic);
-        adjustConfidenceIfNeeded(container, ic, confidence, isStreaming);
+        adjustConfidenceIfNeeded(container, ic, confidence, isStreaming, sfSupported);
         if (*confidence == 0)
             container = NULL;
     }
@@ -2113,7 +2116,7 @@ fail:
 }
 
 static const char *BetterSniffFFMPEG(const sp<DataSource> &source,
-        float *confidence, sp<AMessage> meta)
+        float *confidence, bool *sfSupported, sp<AMessage> meta)
 {
     const char *ret = NULL;
     char url[PATH_MAX] = {0};
@@ -2123,7 +2126,7 @@ static const char *BetterSniffFFMPEG(const sp<DataSource> &source,
     // pass the addr of smart pointer("source")
     snprintf(url, sizeof(url), "android-source:%p", source.get());
 
-    ret = SniffFFMPEGCommon(url, confidence,
+    ret = SniffFFMPEGCommon(url, confidence, sfSupported,
             (source->flags() & DataSource::kIsCachingDataSource));
     if (ret) {
         meta->setString("extended-extractor-url", url);
@@ -2133,7 +2136,7 @@ static const char *BetterSniffFFMPEG(const sp<DataSource> &source,
 }
 
 static const char *LegacySniffFFMPEG(const sp<DataSource> &source,
-         float *confidence, sp<AMessage> meta)
+         float *confidence, bool *sfSupported, sp<AMessage> meta)
 {
     const char *ret = NULL;
     char url[PATH_MAX] = {0};
@@ -2151,7 +2154,7 @@ static const char *LegacySniffFFMPEG(const sp<DataSource> &source,
     // pass the addr of smart pointer("source") + file name
     snprintf(url, sizeof(url), "android-source:%p|file:%s", source.get(), uri.string());
 
-    ret = SniffFFMPEGCommon(url, confidence, false);
+    ret = SniffFFMPEGCommon(url, confidence, sfSupported, false);
     if (ret) {
         meta->setString("extended-extractor-url", url);
     }
@@ -2166,6 +2169,7 @@ bool SniffFFMPEG(
         sp<AMessage> *meta) {
 
     float newConfidence = 0.08f;
+    bool sfSupported = false;
 
     ALOGV("SniffFFMPEG (initial confidence: %f, mime: %s)", *confidence,
             mimeType == NULL ? "unknown" : *mimeType);
@@ -2183,10 +2187,10 @@ bool SniffFFMPEG(
 
     *meta = new AMessage;
 
-    const char *container = BetterSniffFFMPEG(source, &newConfidence, *meta);
+    const char *container = BetterSniffFFMPEG(source, &newConfidence, &sfSupported, *meta);
     if (!container) {
         ALOGW("sniff through BetterSniffFFMPEG failed, try LegacySniffFFMPEG");
-        container = LegacySniffFFMPEG(source, &newConfidence, *meta);
+        container = LegacySniffFFMPEG(source, &newConfidence, &sfSupported, *meta);
         if (container) {
             ALOGV("sniff through LegacySniffFFMPEG success");
         }
@@ -2194,7 +2198,7 @@ bool SniffFFMPEG(
         ALOGV("sniff through BetterSniffFFMPEG success");
     }
 
-    if (mimeType != NULL && container != NULL && *mimeType == container) {
+    if (mimeType != NULL && container != NULL && *mimeType == container && sfSupported) {
         ALOGD("SniffFFMPEG sniffed the same thing as StageFright, use their extractor instead");
         goto fail;
     }
