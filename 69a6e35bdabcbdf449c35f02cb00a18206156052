@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da87b5cf_0ddb74ee",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1890,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2017-06-04T19:29:39Z",
+      "side": 1,
+      "message": "I guess this is kind of a roundabout way of getting the result of this call? Any way we can directly encode that we want to check if the codec is supported instead of passing sfSupported around?",
+      "range": {
+        "startLine": 1890,
+        "startChar": 8,
+        "endLine": 1890,
+        "endChar": 55
+      },
+      "revId": "69a6e35bdabcbdf449c35f02cb00a18206156052",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
