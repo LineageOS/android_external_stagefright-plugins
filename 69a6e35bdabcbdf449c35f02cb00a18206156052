@@ -22,6 +22,30 @@
       "revId": "69a6e35bdabcbdf449c35f02cb00a18206156052",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da87b5cf_80d3cb37",
+        "filename": "extractor/FFmpegExtractor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1890,
+      "author": {
+        "id": 6351
+      },
+      "writtenOn": "2017-06-04T22:37:22Z",
+      "side": 1,
+      "message": "I think it\u0027s either that or more twiddling with magic \"confidence\" values which is really quite hacky and brittle (things like use 0.88 to be higher than what SF uses for ____).",
+      "parentUuid": "da87b5cf_0ddb74ee",
+      "range": {
+        "startLine": 1890,
+        "startChar": 8,
+        "endLine": 1890,
+        "endChar": 55
+      },
+      "revId": "69a6e35bdabcbdf449c35f02cb00a18206156052",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
